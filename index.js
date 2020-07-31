@@ -341,6 +341,11 @@ const trim = self => {
       del(self, walker)
       walker = prev
     }
+  } else {
+    // probe to remove least-recently-used item to free ram
+    let node = self[LRU_LIST].tail
+    if (node && isStale(self, node.value))
+      del(self, node)
   }
 }
 
