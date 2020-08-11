@@ -98,7 +98,8 @@ away.
     If the key is not found, `get()` searches it in swapped data (if swap is activated),
     then sets default value (if default is defined), otherwise will return `undefined`.
 
-    The key and val can be any value.
+    The `key` and `val` can be any value. But if you use `swap` option, it's better to use
+    primitives as `key` because it's used as filename in cache.
 
 * `peek(key)`
 
