@@ -3,6 +3,7 @@
 const _ = require('lodash')
 const fs = require('fs-extra')
 const path = require('path')
+const querystring = require('querystring');
 const tmp = require('tmp')
 
 // A linked list to keep track of recently-used-ness
@@ -223,7 +224,7 @@ class LRUCache {
 
     try {
       const content = JSON.parse(fs.readFileSync(
-        path.join(this[SWAP_DIR], key)).toString());
+        path.join(this[SWAP_DIR], escape(key))).toString());
       this.set(key, content)
       return get(this, key, true)
 
@@ -361,15 +362,17 @@ const del = (self, node, terminate = false) => {
 
     if (self[SWAP_DIR]) {
       if (terminate) {
-        fs.removeSync(path.join(self[SWAP_DIR], hit.key))
+        fs.removeSync(path.join(self[SWAP_DIR], escape(hit.key)))
       } else {
         fs.writeFileSync(
-          path.join(self[SWAP_DIR], hit.key),
+          path.join(self[SWAP_DIR], escape(hit.key)),
           JSON.stringify(hit.value));
       }
     }
   }
 }
+
+const escape = val => querystring.escape(_.toString(val));
 
 class Entry {
   constructor (key, value, length, now, maxAge) {
